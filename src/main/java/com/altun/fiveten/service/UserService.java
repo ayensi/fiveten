@@ -2,6 +2,7 @@ package com.altun.fiveten.service;
 
 import com.altun.fiveten.model.User;
 import com.altun.fiveten.repository.UserRepository;
+import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

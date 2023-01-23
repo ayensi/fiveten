@@ -1,5 +1,6 @@
 package com.altun.fiveten.controller;
 
+
 import com.altun.fiveten.dto.*;
 import com.altun.fiveten.enums.ERole;
 import com.altun.fiveten.model.ConfirmationToken;
@@ -9,6 +10,7 @@ import com.altun.fiveten.model.User;
 import com.altun.fiveten.security.JWTGenerator;
 import com.altun.fiveten.service.*;
 import jakarta.mail.internet.MimeMessage;
+import jakarta.servlet.http.HttpServlet;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.geo.Point;
@@ -52,6 +54,7 @@ public class AuthController {
     }
 
     @PostMapping("login")
+
     public ResponseEntity<Object> login(@Valid @RequestBody LoginDto loginDto) throws BadCredentialsException {
         Authentication authentication;
         try {
@@ -74,6 +77,7 @@ public class AuthController {
     }
 
     @PostMapping("register")
+
     public ResponseEntity<String> register(@Valid @RequestBody RegisterDto registerDto) {
         if (userService.existsByUsername(registerDto.getUsername())) {
             return new ResponseEntity<>("Username is taken!", HttpStatus.BAD_REQUEST);
@@ -93,13 +97,13 @@ public class AuthController {
 
         confirmationTokenService.save(token);
 
-        MimeMessage message = emailService.createConfirmationMail(user,token);
-        emailService.sendEmail(message);
+        emailService.createConfirmationMail(user,token);
 
         return new ResponseEntity<>("User registered success!", HttpStatus.OK);
     }
 
     @PostMapping("confirm-account")
+
     public ResponseEntity<Object> confirmUserAccount(@RequestParam("token") String token){
 
         ConfirmationToken confirmationToken = confirmationTokenService.findByConfirmationToken(token);
@@ -120,6 +124,7 @@ public class AuthController {
     }
 
     @PostMapping("forgot-my-password")
+
     public ResponseEntity<Object> forgotUserPassword(@Valid @RequestBody ForgotPasswordDTO forgotPasswordDTO){
 
         User user = userService.findByEmail(forgotPasswordDTO.getEmail());
@@ -128,13 +133,12 @@ public class AuthController {
 
         renewalTokenService.save(token);
 
-        MimeMessage message = emailService.createForgotPasswordMail(forgotPasswordDTO.getEmail(),token);
-
-        emailService.sendEmail(message);
+        emailService.createForgotPasswordMail(forgotPasswordDTO.getEmail(),token);
 
         return new ResponseEntity<>("Password reset email is sent!", HttpStatus.OK);
     }
     @PostMapping("password-renewal")
+
     public ResponseEntity<Object> renewUserPassword(@RequestParam("token") String token, @RequestBody PasswordRenewalDTO renewalDTO){
         PasswordRenewalToken passwordRenewalToken = renewalTokenService.findByRenewalToken(token);
 
